@@ -4,12 +4,14 @@ import requests
 def logging_decorator(some_basic_func, path='log.txt'):
     log_dict = {
         'timedate': None,
+        'func_called': None,
         'pos_arguments': None,
         'kw_args': None,
         'return': None
     }
     def new_function(*args, **kwargs):
         log_dict['timedate'] = time.asctime()
+        log_dict['func_called'] = some_basic_func
         log_dict['pos_arguments'] = args
         log_dict['kw_args'] = kwargs
         log_dict['return'] = some_basic_func(*args, **kwargs)
