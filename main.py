@@ -1,29 +1,33 @@
 import time
 import requests
 
-def logging_decorator(some_basic_func, path='log.txt'):
-    log_dict = {
-        'timedate': None,
-        'func_called': None,
-        'pos_arguments': None,
-        'kw_args': None,
-        'return': None
-    }
-    def new_function(*args, **kwargs):
-        log_dict['timedate'] = time.asctime()
-        log_dict['func_called'] = some_basic_func
-        log_dict['pos_arguments'] = args
-        log_dict['kw_args'] = kwargs
-        log_dict['return'] = some_basic_func(*args, **kwargs)
-        with open(path, 'w', encoding='utf-8', ) as logfile:
-            for key in log_dict:
-                data = log_dict[key]
-                logfile.write(f'{key}: {data}\n')
-        return some_basic_func(*args, **kwargs)
-    print('log is written')
-    return new_function
+def logging_decorator(parameter):
+    """Parameter - path to logfile.txt"""
+    def decorator(some_basic_func):
+        def new_function(*args, **kwargs):
+            log_dict = {
+            'timedate': None,
+            'func_called': None,
+            'pos_arguments': None,
+            'kw_args': None,
+            'return': None
+            }
+            log_dict['timedate'] = time.asctime()
+            log_dict['func_called'] = some_basic_func
+            log_dict['pos_arguments'] = args
+            log_dict['kw_args'] = kwargs
+            log_dict['return'] = some_basic_func(*args, **kwargs)
+            with open(parameter, 'w', encoding='utf-8', ) as logfile:
+                for key in log_dict:
+                    data = log_dict[key]
+                    logfile.write(f'{key}: {data}\n')
+            result = some_basic_func(*args, **kwargs)
+            return result
+        print('log is written')
+        return new_function
+    return decorator
 
-@logging_decorator
+@logging_decorator(parameter='log.txt')
 def get_hero_int(*args):
     hero_list = args
     access_token = 2619421814940190
